@@ -36,7 +36,6 @@ Manage Grafana v4.0 users
         - fullname: Foo Bar
         - is_admin: true
 """
-
 import salt.utils.dictupdate as dictupdate
 from salt.utils.dictdiffer import deep_diff
 
@@ -48,9 +47,7 @@ def __virtual__():
     return (False, "grafana4 module could not be loaded")
 
 
-def present(
-    name, password, email, is_admin=False, fullname=None, theme=None, profile="grafana"
-):
+def present(name, password, email, is_admin=False, fullname=None, theme=None, profile="grafana"):
     """
     Ensure that a user is present.
 
@@ -85,7 +82,7 @@ def present(
 
     if create:
         if __opts__["test"]:
-            ret["comment"] = "User {} will be created".format(name)
+            ret["comment"] = f"User {name} will be created"
             return ret
         __salt__["grafana4.create_user"](
             login=name, password=password, email=email, name=fullname, profile=profile
@@ -94,14 +91,10 @@ def present(
         ret["changes"]["new"] = user
 
     user_data = __salt__["grafana4.get_user_data"](user["id"], profile=profile)
-    data = _get_json_data(
-        login=name, email=email, name=fullname, theme=theme, defaults=user_data
-    )
-    if data != _get_json_data(
-        login=None, email=None, name=None, theme=None, defaults=user_data
-    ):
+    data = _get_json_data(login=name, email=email, name=fullname, theme=theme, defaults=user_data)
+    if data != _get_json_data(login=None, email=None, name=None, theme=None, defaults=user_data):
         if __opts__["test"]:
-            ret["comment"] = "User {} will be updated".format(name)
+            ret["comment"] = f"User {name} will be updated"
             return ret
         __salt__["grafana4.update_user"](user["id"], profile=profile, **data)
         dictupdate.update(
@@ -111,7 +104,7 @@ def present(
 
     if user["isAdmin"] != is_admin:
         if __opts__["test"]:
-            ret["comment"] = "User {} isAdmin status will be updated".format(name)
+            ret["comment"] = f"User {name} isAdmin status will be updated"
             return ret
         __salt__["grafana4.update_user_permissions"](
             user["id"], isGrafanaAdmin=is_admin, profile=profile
@@ -124,13 +117,13 @@ def present(
     ret["result"] = True
     if create:
         ret["changes"] = ret["changes"]["new"]
-        ret["comment"] = "New user {} added".format(name)
+        ret["comment"] = f"New user {name} added"
     else:
         if ret["changes"]:
-            ret["comment"] = "User {} updated".format(name)
+            ret["comment"] = f"User {name} updated"
         else:
             ret["changes"] = {}
-            ret["comment"] = "User {} already up-to-date".format(name)
+            ret["comment"] = f"User {name} already up-to-date"
 
     return ret
 
@@ -154,7 +147,7 @@ def absent(name, profile="grafana"):
 
     if user:
         if __opts__["test"]:
-            ret["comment"] = "User {} will be deleted".format(name)
+            ret["comment"] = f"User {name} will be deleted"
             return ret
         orgs = __salt__["grafana4.get_user_orgs"](user["id"], profile=profile)
         __salt__["grafana4.delete_user"](user["id"], profile=profile)
@@ -166,17 +159,15 @@ def absent(name, profile="grafana"):
                 # will be the email)
                 __salt__["grafana4.delete_org"](org["orgId"], profile=profile)
             else:
-                __salt__["grafana4.delete_user_org"](
-                    user["id"], org["orgId"], profile=profile
-                )
+                __salt__["grafana4.delete_user_org"](user["id"], org["orgId"], profile=profile)
     else:
         ret["result"] = True
-        ret["comment"] = "User {} already absent".format(name)
+        ret["comment"] = f"User {name} already absent"
         return ret
 
     ret["result"] = True
     ret["changes"][name] = "Absent"
-    ret["comment"] = "User {} was deleted".format(name)
+    ret["comment"] = f"User {name} was deleted"
     return ret
 
 

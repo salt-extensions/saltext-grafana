@@ -1,7 +1,9 @@
-import pytest
+from unittest.mock import MagicMock
+from unittest.mock import Mock
+from unittest.mock import patch
 
+import pytest
 import salt.states.grafana_datasource as grafana_datasource
-from tests.support.mock import MagicMock, Mock, patch
 
 profile = {
     "grafana_url": "http://grafana",
@@ -52,7 +54,7 @@ def test_present():
             )
             assert ret["result"]
             assert ret["comment"] == "Data source test already up-to-date"
-            assert ret["changes"] == {}
+            assert ret["changes"] == {}  # pylint: disable=use-implicit-booleaness-not-comparison
 
         with patch("requests.put") as rput:
             ret = grafana_datasource.present("test", "type", "newurl", profile=profile)

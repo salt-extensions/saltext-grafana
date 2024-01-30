@@ -40,7 +40,7 @@ def __virtual__():
     else:
         return (
             False,
-            'The "{}" module could not be loaded: "requests" is not installed.'.format(
+            'The "{}" module could not be loaded: "requests" is not installed.'.format(  # pylint: disable=consider-using-f-string
                 __virtualname__
             ),
         )
@@ -49,16 +49,16 @@ def __virtual__():
 def _get_headers(profile):
     headers = {"Content-type": "application/json"}
     if profile.get("grafana_token", False):
-        headers["Authorization"] = "Bearer {}".format(profile["grafana_token"])
+        headers["Authorization"] = "Bearer {}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_token"]
+        )
     return headers
 
 
 def _get_auth(profile):
     if profile.get("grafana_token", False):
         return None
-    return requests.auth.HTTPBasicAuth(
-        profile["grafana_user"], profile["grafana_password"]
-    )
+    return requests.auth.HTTPBasicAuth(profile["grafana_user"], profile["grafana_password"])
 
 
 def get_users(profile="grafana"):
@@ -78,7 +78,7 @@ def get_users(profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.get(
-        "{}/api/users".format(profile["grafana_url"]),
+        "{}/api/users".format(profile["grafana_url"]),  # pylint: disable=consider-using-f-string
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -132,7 +132,9 @@ def get_user_data(userid, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.get(
-        "{}/api/users/{}".format(profile["grafana_url"], userid),
+        "{}/api/users/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -171,7 +173,9 @@ def create_user(profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.post(
-        "{}/api/admin/users".format(profile["grafana_url"]),
+        "{}/api/admin/users".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -211,7 +215,9 @@ def update_user(userid, profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.put(
-        "{}/api/users/{}".format(profile["grafana_url"], userid),
+        "{}/api/users/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -245,7 +251,9 @@ def update_user_password(userid, profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.put(
-        "{}/api/admin/users/{}/password".format(profile["grafana_url"], userid),
+        "{}/api/admin/users/{}/password".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -279,7 +287,9 @@ def update_user_permissions(userid, profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.put(
-        "{}/api/admin/users/{}/permissions".format(profile["grafana_url"], userid),
+        "{}/api/admin/users/{}/permissions".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -310,7 +320,9 @@ def delete_user(userid, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.delete(
-        "{}/api/admin/users/{}".format(profile["grafana_url"], userid),
+        "{}/api/admin/users/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -340,7 +352,9 @@ def get_user_orgs(userid, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.get(
-        "{}/api/users/{}/orgs".format(profile["grafana_url"], userid),
+        "{}/api/users/{}/orgs".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -373,7 +387,9 @@ def delete_user_org(userid, orgid, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.delete(
-        "{}/api/orgs/{}/users/{}".format(profile["grafana_url"], orgid, userid),
+        "{}/api/orgs/{}/users/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], orgid, userid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -400,7 +416,7 @@ def get_orgs(profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.get(
-        "{}/api/orgs".format(profile["grafana_url"]),
+        "{}/api/orgs".format(profile["grafana_url"]),  # pylint: disable=consider-using-f-string
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -430,7 +446,9 @@ def get_org(name, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.get(
-        "{}/api/orgs/name/{}".format(profile["grafana_url"], name),
+        "{}/api/orgs/name/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], name
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -461,7 +479,9 @@ def switch_org(orgname, profile="grafana"):
         profile = __salt__["config.option"](profile)
     org = get_org(orgname, profile)
     response = requests.post(
-        "{}/api/user/using/{}".format(profile["grafana_url"], org["id"]),
+        "{}/api/user/using/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], org["id"]
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -493,7 +513,9 @@ def get_org_users(orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.get(
-        "{}/api/org/users".format(profile["grafana_url"]),
+        "{}/api/org/users".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -535,7 +557,9 @@ def create_org_user(orgname=None, profile="grafana", **kwargs):
     if orgname:
         switch_org(orgname, profile)
     response = requests.post(
-        "{}/api/org/users".format(profile["grafana_url"]),
+        "{}/api/org/users".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -581,7 +605,9 @@ def update_org_user(userid, orgname=None, profile="grafana", **kwargs):
     if orgname:
         switch_org(orgname, profile)
     response = requests.patch(
-        "{}/api/org/users/{}".format(profile["grafana_url"], userid),
+        "{}/api/org/users/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -617,7 +643,9 @@ def delete_org_user(userid, orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.delete(
-        "{}/api/org/users/{}".format(profile["grafana_url"], userid),
+        "{}/api/org/users/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], userid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -649,7 +677,9 @@ def get_org_address(orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.get(
-        "{}/api/org/address".format(profile["grafana_url"]),
+        "{}/api/org/address".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -699,7 +729,9 @@ def update_org_address(orgname=None, profile="grafana", **kwargs):
     if orgname:
         switch_org(orgname, profile)
     response = requests.put(
-        "{}/api/org/address".format(profile["grafana_url"]),
+        "{}/api/org/address".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -732,7 +764,9 @@ def get_org_prefs(orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.get(
-        "{}/api/org/preferences".format(profile["grafana_url"]),
+        "{}/api/org/preferences".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -773,7 +807,9 @@ def update_org_prefs(orgname=None, profile="grafana", **kwargs):
     if orgname:
         switch_org(orgname, profile)
     response = requests.put(
-        "{}/api/org/preferences".format(profile["grafana_url"]),
+        "{}/api/org/preferences".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -804,7 +840,7 @@ def create_org(profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.post(
-        "{}/api/orgs".format(profile["grafana_url"]),
+        "{}/api/orgs".format(profile["grafana_url"]),  # pylint: disable=consider-using-f-string
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -838,7 +874,9 @@ def update_org(orgid, profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.put(
-        "{}/api/orgs/{}".format(profile["grafana_url"], orgid),
+        "{}/api/orgs/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], orgid
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -869,7 +907,9 @@ def delete_org(orgid, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.delete(
-        "{}/api/orgs/{}".format(profile["grafana_url"], orgid),
+        "{}/api/orgs/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], orgid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -901,7 +941,9 @@ def get_datasources(orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.get(
-        "{}/api/datasources".format(profile["grafana_url"]),
+        "{}/api/datasources".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -1005,7 +1047,9 @@ def create_datasource(orgname=None, profile="grafana", **kwargs):
     if orgname:
         switch_org(orgname, profile)
     response = requests.post(
-        "{}/api/datasources".format(profile["grafana_url"]),
+        "{}/api/datasources".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -1081,7 +1125,9 @@ def update_datasource(datasourceid, orgname=None, profile="grafana", **kwargs):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.put(
-        "{}/api/datasources/{}".format(profile["grafana_url"], datasourceid),
+        "{}/api/datasources/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], datasourceid
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),
@@ -1114,7 +1160,9 @@ def delete_datasource(datasourceid, orgname=None, profile="grafana"):
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.delete(
-        "{}/api/datasources/{}".format(profile["grafana_url"], datasourceid),
+        "{}/api/datasources/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], datasourceid
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -1149,7 +1197,9 @@ def get_dashboard(slug, orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.get(
-        "{}/api/dashboards/db/{}".format(profile["grafana_url"], slug),
+        "{}/api/dashboards/db/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], slug
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -1187,7 +1237,9 @@ def delete_dashboard(slug, orgname=None, profile="grafana"):
     if orgname:
         switch_org(orgname, profile)
     response = requests.delete(
-        "{}/api/dashboards/db/{}".format(profile["grafana_url"], slug),
+        "{}/api/dashboards/db/{}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"], slug
+        ),
         auth=_get_auth(profile),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
@@ -1225,7 +1277,9 @@ def create_update_dashboard(orgname=None, profile="grafana", **kwargs):
     if orgname:
         switch_org(orgname, profile)
     response = requests.post(
-        "{}/api/dashboards/db".format(profile.get("grafana_url")),
+        "{}/api/dashboards/db".format(  # pylint: disable=consider-using-f-string
+            profile.get("grafana_url")
+        ),
         json=kwargs,
         auth=_get_auth(profile),
         headers=_get_headers(profile),

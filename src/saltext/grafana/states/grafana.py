@@ -165,7 +165,6 @@ add rows if they do not exist in existing dashboards, and to update rows if
 they exist in dashboards. The module will not manage rows that are not defined,
 allowing users to manage their own custom rows.
 """
-
 import copy
 
 import salt.utils.json
@@ -189,7 +188,7 @@ def _parse_profile(profile):
     if isinstance(profile, str):
         _profile = __salt__["config.option"](profile)
         if not _profile:
-            msg = "Pillar key for profile {} not found.".format(profile)
+            msg = f"Pillar key for profile {profile} not found."
             raise SaltInvocationError(msg)
     else:
         _profile = profile
@@ -288,11 +287,10 @@ def dashboard_present(
     else:
         if not dashboard:
             raise SaltInvocationError(
-                "Grafana dashboard does not exist and no"
-                " dashboard template was provided."
+                "Grafana dashboard does not exist and no dashboard template was provided."
             )
         if __opts__["test"]:
-            ret["comment"] = "Dashboard {} is set to be created.".format(name)
+            ret["comment"] = f"Dashboard {name} is set to be created."
             ret["result"] = None
             return ret
         _dashboard = dashboard
@@ -330,12 +328,12 @@ def dashboard_present(
             update_rows.append(title)
     if not update_rows:
         ret["result"] = True
-        ret["comment"] = "Dashboard {} is up to date".format(name)
+        ret["comment"] = f"Dashboard {name} is up to date"
         return ret
     if __opts__["test"]:
-        msg = "Dashboard {} is set to be updated.".format(name)
+        msg = f"Dashboard {name} is set to be updated."
         if update_rows:
-            msg = "{} The following rows set to be updated: {}".format(msg, update_rows)
+            msg = f"{msg} The following rows set to be updated: {update_rows}"
         ret["comment"] = msg
         return ret
     body = {
@@ -350,13 +348,13 @@ def dashboard_present(
     if updated:
         ret["result"] = True
         ret["changes"]["changed"] = name
-        msg = "Updated dashboard {}.".format(name)
+        msg = f"Updated dashboard {name}."
         if update_rows:
-            msg = "{} The following rows were updated: {}".format(msg, update_rows)
+            msg = f"{msg} The following rows were updated: {update_rows}"
         ret["comment"] = msg
     else:
         ret["result"] = False
-        msg = "Failed to update dashboard {}.".format(name)
+        msg = f"Failed to update dashboard {name}."
         ret["comment"] = msg
 
     return ret
@@ -385,7 +383,7 @@ def dashboard_absent(name, hosts=None, profile="grafana"):
 
     if exists:
         if __opts__["test"]:
-            ret["comment"] = "Dashboard {} is set to be removed.".format(name)
+            ret["comment"] = f"Dashboard {name} is set to be removed."
             return ret
         deleted = __salt__["elasticsearch.delete"](
             index=index, doc_type="dashboard", id=name, hosts=hosts
@@ -396,9 +394,9 @@ def dashboard_absent(name, hosts=None, profile="grafana"):
             ret["changes"]["new"] = None
         else:
             ret["result"] = False
-            ret["comment"] = "Failed to delete {} dashboard.".format(name)
+            ret["comment"] = f"Failed to delete {name} dashboard."
     else:
         ret["result"] = True
-        ret["comment"] = "Dashboard {} does not exist.".format(name)
+        ret["comment"] = f"Dashboard {name} does not exist."
 
     return ret
