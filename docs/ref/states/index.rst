@@ -16,4 +16,3 @@ _____________
     grafana4_user
     grafana_dashboard
     grafana_datasource
-    grafana_mod

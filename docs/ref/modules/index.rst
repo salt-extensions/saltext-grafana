@@ -10,4 +10,3 @@ _________________
     :toctree:
 
     grafana4
-    grafana_mod
