@@ -41,10 +41,8 @@ Manage Grafana v4.0 orgs
         - state: ""
         - country: ""
 """
-
-from requests.exceptions import HTTPError
-
 import salt.utils.dictupdate as dictupdate
+from requests.exceptions import HTTPError
 from salt.utils.dictdiffer import deep_diff
 
 
@@ -130,12 +128,12 @@ def present(
 
     if create:
         if __opts__["test"]:
-            ret["comment"] = "Org {} will be created".format(name)
+            ret["comment"] = f"Org {name} will be created"
             return ret
         __salt__["grafana4.create_org"](profile=profile, name=name)
         org = __salt__["grafana4.get_org"](name, profile)
         ret["changes"] = org
-        ret["comment"] = "New org {} added".format(name)
+        ret["comment"] = f"New org {name} added"
 
     data = _get_json_data(
         address1=address1,
@@ -148,7 +146,7 @@ def present(
     )
     if data != org["address"]:
         if __opts__["test"]:
-            ret["comment"] = "Org {} address will be updated".format(name)
+            ret["comment"] = f"Org {name} address will be updated"
             return ret
         __salt__["grafana4.update_org_address"](name, profile=profile, **data)
         if create:
@@ -165,7 +163,7 @@ def present(
     )
     if data != prefs:
         if __opts__["test"]:
-            ret["comment"] = "Org {} prefs will be updated".format(name)
+            ret["comment"] = f"Org {name} prefs will be updated"
             return ret
         __salt__["grafana4.update_org_prefs"](name, profile=profile, **data)
         if create:
@@ -184,16 +182,16 @@ def present(
             if username in db_users:
                 if role is False:
                     if __opts__["test"]:
-                        ret["comment"] = "Org {} user {} will be deleted".format(
-                            name, username
-                        )
+                        ret["comment"] = f"Org {name} user {username} will be deleted"
                         return ret
                     __salt__["grafana4.delete_org_user"](
                         db_users[username]["userId"], profile=profile
                     )
                 elif role != db_users[username]["role"]:
                     if __opts__["test"]:
-                        ret["comment"] = "Org {} user {} role will be updated".format(
+                        ret[
+                            "comment"
+                        ] = "Org {} user {} role will be updated".format(  # pylint: disable=consider-using-f-string
                             name, username
                         )
                         return ret
@@ -205,9 +203,7 @@ def present(
                     )
             elif role:
                 if __opts__["test"]:
-                    ret["comment"] = "Org {} user {} will be created".format(
-                        name, username
-                    )
+                    ret["comment"] = f"Org {name} user {username} will be created"
                     return ret
                 __salt__["grafana4.create_org_user"](
                     loginOrEmail=username, role=role, profile=profile
@@ -227,10 +223,10 @@ def present(
     ret["result"] = True
     if not create:
         if ret["changes"]:
-            ret["comment"] = "Org {} updated".format(name)
+            ret["comment"] = f"Org {name} updated"
         else:
             ret["changes"] = {}
-            ret["comment"] = "Org {} already up-to-date".format(name)
+            ret["comment"] = f"Org {name} already up-to-date"
 
     return ret
 
@@ -254,17 +250,17 @@ def absent(name, profile="grafana"):
 
     if not org:
         ret["result"] = True
-        ret["comment"] = "Org {} already absent".format(name)
+        ret["comment"] = f"Org {name} already absent"
         return ret
 
     if __opts__["test"]:
-        ret["comment"] = "Org {} will be deleted".format(name)
+        ret["comment"] = f"Org {name} will be deleted"
         return ret
     __salt__["grafana4.delete_org"](org["id"], profile=profile)
 
     ret["result"] = True
     ret["changes"][name] = "Absent"
-    ret["comment"] = "Org {} was deleted".format(name)
+    ret["comment"] = f"Org {name} was deleted"
 
     return ret
 

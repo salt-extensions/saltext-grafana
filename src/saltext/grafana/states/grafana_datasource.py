@@ -23,7 +23,6 @@ Manage Grafana v2.0 data sources
         - basic_auth_password: mypass
         - is_default: true
 """
-
 import requests
 
 
@@ -110,19 +109,21 @@ def present(
         ret["result"] = True
         ret["changes"] = _diff(datasource, data)
         if ret["changes"]["new"] or ret["changes"]["old"]:
-            ret["comment"] = "Data source {} updated".format(name)
+            ret["comment"] = f"Data source {name} updated"
         else:
             ret["changes"] = {}
-            ret["comment"] = "Data source {} already up-to-date".format(name)
+            ret["comment"] = f"Data source {name} already up-to-date"
     else:
         requests.post(
-            "{}/api/datasources".format(profile["grafana_url"]),
+            "{}/api/datasources".format(  # pylint: disable=consider-using-f-string
+                profile["grafana_url"]
+            ),  # pylint: disable=consider-using-f-string
             data,
             headers=_get_headers(profile),
             timeout=profile.get("grafana_timeout", 3),
         )
         ret["result"] = True
-        ret["comment"] = "New data source {} added".format(name)
+        ret["comment"] = f"New data source {name} added"
         ret["changes"] = data
 
     return ret
@@ -143,7 +144,7 @@ def absent(name, profile="grafana"):
 
     if not datasource:
         ret["result"] = True
-        ret["comment"] = "Data source {} already absent".format(name)
+        ret["comment"] = f"Data source {name} already absent"
         return ret
 
     requests.delete(
@@ -153,18 +154,22 @@ def absent(name, profile="grafana"):
     )
 
     ret["result"] = True
-    ret["comment"] = "Data source {} was deleted".format(name)
+    ret["comment"] = f"Data source {name} was deleted"
 
     return ret
 
 
 def _get_url(profile, datasource_id):
-    return "{}/api/datasources/{}".format(profile["grafana_url"], datasource_id)
+    return "{}/api/datasources/{}".format(  # pylint: disable=consider-using-f-string
+        profile["grafana_url"], datasource_id
+    )
 
 
 def _get_datasource(profile, name):
     response = requests.get(
-        "{}/api/datasources".format(profile["grafana_url"]),
+        "{}/api/datasources".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_url"]
+        ),
         headers=_get_headers(profile),
         timeout=profile.get("grafana_timeout", 3),
     )
@@ -178,7 +183,9 @@ def _get_datasource(profile, name):
 def _get_headers(profile):
     return {
         "Accept": "application/json",
-        "Authorization": "Bearer {}".format(profile["grafana_token"]),
+        "Authorization": "Bearer {}".format(  # pylint: disable=consider-using-f-string
+            profile["grafana_token"]
+        ),  # pylint: disable=consider-using-f-string
     }
 
 
