@@ -36,6 +36,7 @@ Manage Grafana v4.0 users
         - fullname: Foo Bar
         - is_admin: true
 """
+
 import salt.utils.dictupdate as dictupdate
 from salt.utils.dictdiffer import deep_diff
 

@@ -28,13 +28,17 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
 ]
 requires-python = ">= 3.8"
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+    "salt>=3006",
+]
 
 [project.readme]
 file = "README.md"
@@ -42,6 +46,7 @@ content-type = "text/markdown"
 
 [project.urls]
 Homepage = "https://github.com/salt-extensions/saltext-grafana"
+Documentation = "https://salt-extensions.github.io/saltext-grafana/"
 Source = "https://github.com/salt-extensions/saltext-grafana"
 Tracker = "https://github.com/salt-extensions/saltext-grafana/issues"
 
@@ -70,8 +75,9 @@ lint = [
     "saltpylint",
 ]
 tests = [
-    "pytest>=6.1.0",
-    "pytest-salt-factories>=1.0.0rc19",
+    "pytest>=7.2.0",
+    "pytest-salt-factories>=1.0.0; sys_platform == 'win32'",
+    "pytest-salt-factories[docker]>=1.0.0; sys_platform != 'win32'",
 ]
 
 [project.entry-points."salt.loader"]
@@ -101,42 +107,48 @@ build_dir = "build/sphinx"
 [tool.black]
 line-length = 100
 
+[tool.isort]
+force_single_line = true
+skip = ["src/saltext/grafana/__init__.py"]
+profile = "black"
+line_length = 100
+
 [tool.towncrier]
-    package = "saltext.grafana"
-    filename = "CHANGELOG.md"
-    template = "changelog/.template.jinja"
-    directory = "changelog/"
-    start_string = "# Changelog\n"
-    underlines = ["", "", ""]
-    title_format = "## {version} ({project_date})"
-    issue_format = "[#{issue}](https://github.com/salt-extensions/saltext-grafana/issues/{issue})"
+package = "saltext.grafana"
+filename = "CHANGELOG.md"
+template = "changelog/.template.jinja"
+directory = "changelog/"
+start_string = "# Changelog\n"
+underlines = ["", "", ""]
+title_format = "## {version} ({project_date})"
+issue_format = "[#{issue}](https://github.com/salt-extensions/saltext-grafana/issues/{issue})"
 
-    [[tool.towncrier.type]]
-        directory = "removed"
-        name = "Removed"
-        showcontent = true
+[[tool.towncrier.type]]
+directory = "removed"
+name = "Removed"
+showcontent = true
 
-    [[tool.towncrier.type]]
-        directory = "deprecated"
-        name = "Deprecated"
-        showcontent = true
+[[tool.towncrier.type]]
+directory = "deprecated"
+name = "Deprecated"
+showcontent = true
 
-    [[tool.towncrier.type]]
-        directory = "changed"
-        name = "Changed"
-        showcontent = true
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
 
-    [[tool.towncrier.type]]
-        directory = "fixed"
-        name = "Fixed"
-        showcontent = true
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
 
-    [[tool.towncrier.type]]
-        directory = "added"
-        name = "Added"
-        showcontent = true
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
 
-    [[tool.towncrier.type]]
-        directory = "security"
-        name = "Security"
-        showcontent = true
+[[tool.towncrier.type]]
+directory = "security"
+name = "Security"
+showcontent = true

@@ -42,6 +42,7 @@ to update data sources if the already exists.
         - basic_auth_password: mypass
         - is_default: true
 """
+
 from salt.utils.dictdiffer import deep_diff
 
 
