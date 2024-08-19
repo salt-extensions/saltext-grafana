@@ -36,6 +36,7 @@ add rows if they do not exist in existing dashboards, and to update rows if
 they exist in dashboards. The module will not manage rows that are not defined,
 allowing users to manage their own custom rows.
 """
+
 import copy
 
 import requests
@@ -150,14 +151,14 @@ def present(
     if updated_needed:
         if __opts__["test"]:
             ret["result"] = None
-            ret[
-                "comment"
-            ] = "Dashboard {} is set to be updated, changes={}".format(  # pylint: disable=consider-using-f-string
-                name,
-                salt.utils.json.dumps(
-                    _dashboard_diff(_cleaned(new_dashboard), _cleaned(old_dashboard)),
-                    indent=4,
-                ),
+            ret["comment"] = (
+                "Dashboard {} is set to be updated, changes={}".format(  # pylint: disable=consider-using-f-string
+                    name,
+                    salt.utils.json.dumps(
+                        _dashboard_diff(_cleaned(new_dashboard), _cleaned(old_dashboard)),
+                        indent=4,
+                    ),
+                )
             )
             return ret
 

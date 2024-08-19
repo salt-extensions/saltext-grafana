@@ -51,6 +51,7 @@ allowing users to manage their own custom rows.
                     title: Imaginary
                     type: graph
 """
+
 import copy
 
 import salt.utils.json
@@ -165,14 +166,14 @@ def present(
     if updated_needed:
         if __opts__["test"]:
             ret["result"] = None
-            ret[
-                "comment"
-            ] = "Dashboard {} is set to be updated, changes={}".format(  # pylint: disable=consider-using-f-string
-                name,
-                salt.utils.json.dumps(
-                    _dashboard_diff(_cleaned(new_dashboard), _cleaned(old_dashboard)),
-                    indent=4,
-                ),
+            ret["comment"] = (
+                "Dashboard {} is set to be updated, changes={}".format(  # pylint: disable=consider-using-f-string
+                    name,
+                    salt.utils.json.dumps(
+                        _dashboard_diff(_cleaned(new_dashboard), _cleaned(old_dashboard)),
+                        indent=4,
+                    ),
+                )
             )
             return ret
 

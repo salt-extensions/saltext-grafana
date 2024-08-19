@@ -41,6 +41,7 @@ Manage Grafana v4.0 orgs
         - state: ""
         - country: ""
 """
+
 import salt.utils.dictupdate as dictupdate
 from requests.exceptions import HTTPError
 from salt.utils.dictdiffer import deep_diff
@@ -189,10 +190,10 @@ def present(
                     )
                 elif role != db_users[username]["role"]:
                     if __opts__["test"]:
-                        ret[
-                            "comment"
-                        ] = "Org {} user {} role will be updated".format(  # pylint: disable=consider-using-f-string
-                            name, username
+                        ret["comment"] = (
+                            "Org {} user {} role will be updated".format(  # pylint: disable=consider-using-f-string
+                                name, username
+                            )
                         )
                         return ret
                     __salt__["grafana4.update_org_user"](
