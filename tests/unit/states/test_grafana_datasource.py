@@ -3,7 +3,8 @@ from unittest.mock import Mock
 from unittest.mock import patch
 
 import pytest
-import salt.states.grafana_datasource as grafana_datasource
+
+from saltext.grafana.states import grafana_datasource
 
 profile = {
     "grafana_url": "http://grafana",

@@ -6,9 +6,10 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import pytest
-import salt.states.grafana as grafana
 import salt.utils.json
 from salt.exceptions import SaltInvocationError
+
+from saltext.grafana.states import grafana
 
 
 @pytest.fixture
