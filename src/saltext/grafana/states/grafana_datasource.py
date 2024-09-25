@@ -34,6 +34,7 @@ def __virtual__():
     return (False, "Not configured for grafana_version 2")
 
 
+# pylint: disable=redefined-builtin
 def present(
     name,
     type,
@@ -190,6 +191,7 @@ def _get_headers(profile):
     }
 
 
+# pylint: disable=redefined-builtin
 def _get_json_data(
     name,
     type,
@@ -225,7 +227,7 @@ def _diff(old, new):
     old = old.copy()
     new = new.copy()
     for key in old_keys:
-        if key == "id" or key == "orgId":
+        if key in ("id", "orgId"):
             del old[key]
         elif key not in new.keys():
             del old[key]

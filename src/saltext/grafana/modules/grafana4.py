@@ -37,13 +37,12 @@ def __virtual__():
     """
     if HAS_LIBS:
         return __virtualname__
-    else:
-        return (
-            False,
-            'The "{}" module could not be loaded: "requests" is not installed.'.format(  # pylint: disable=consider-using-f-string
-                __virtualname__
-            ),
-        )
+    return (
+        False,
+        'The "{}" module could not be loaded: "requests" is not installed.'.format(  # pylint: disable=consider-using-f-string
+            __virtualname__
+        ),
+    )
 
 
 def _get_headers(profile):
@@ -1060,7 +1059,7 @@ def create_datasource(orgname=None, profile="grafana", **kwargs):
     return response.json()
 
 
-def update_datasource(datasourceid, orgname=None, profile="grafana", **kwargs):
+def update_datasource(datasourceid, profile="grafana", **kwargs):
     """
     Update a datasource.
 
@@ -1122,6 +1121,8 @@ def update_datasource(datasourceid, orgname=None, profile="grafana", **kwargs):
         salt '*' grafana4.update_datasource <datasourceid>
 
     """
+    # This was an unused keyword argument previously, just drop it.
+    kwargs.pop("orgname", None)
     if isinstance(profile, str):
         profile = __salt__["config.option"](profile)
     response = requests.put(
@@ -1140,6 +1141,7 @@ def update_datasource(datasourceid, orgname=None, profile="grafana", **kwargs):
     return {}
 
 
+# pylint: disable=unused-argument
 def delete_datasource(datasourceid, orgname=None, profile="grafana"):
     """
     Delete a datasource.

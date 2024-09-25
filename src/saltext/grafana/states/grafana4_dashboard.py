@@ -284,9 +284,9 @@ def _inherited_dashboard(dashboard, base_dashboards_from_pillar, ret):
 
     result_dashboard = {}
     tags = set()
-    for dashboard in base_dashboards:
-        tags.update(dashboard.get("tags", []))
-        result_dashboard.update(dashboard)
+    for single in base_dashboards:
+        tags.update(single.get("tags", []))
+        result_dashboard.update(single)
     result_dashboard["tags"] = list(tags)
     return result_dashboard
 
@@ -306,8 +306,8 @@ def _inherited_row(row, base_rows_from_pillar, ret):
     base_rows.append(row)
 
     result_row = {}
-    for row in base_rows:
-        result_row.update(row)
+    for single in base_rows:
+        result_row.update(single)
     return result_row
 
 
@@ -326,8 +326,8 @@ def _inherited_panel(panel, base_panels_from_pillar, ret):
     base_panels.append(panel)
 
     result_panel = {}
-    for panel in base_panels:
-        result_panel.update(panel)
+    for single in base_panels:
+        result_panel.update(single)
     return result_panel
 
 

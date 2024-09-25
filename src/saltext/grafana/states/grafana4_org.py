@@ -42,8 +42,8 @@ Manage Grafana v4.0 orgs
         - country: ""
 """
 
-import salt.utils.dictupdate as dictupdate
 from requests.exceptions import HTTPError
+from salt.utils import dictupdate
 from salt.utils.dictdiffer import deep_diff
 
 
