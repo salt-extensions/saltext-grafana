@@ -53,6 +53,7 @@ def __virtual__():
     return (False, "grafana4 module could not be loaded")
 
 
+# pylint: disable=redefined-builtin
 def present(
     name,
     type,
